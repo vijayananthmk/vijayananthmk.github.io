@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Opportunity Cost Calculator — Vijay Ananth</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: #ffffff;
+            color: #222222;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+                         Helvetica, Arial, sans-serif;
+            line-height: 1.7;
+        }
+
+        main {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 70px 25px 100px;
+        }
+
+        header {
+            margin-bottom: 50px;
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 600;
+            margin: 0 0 15px;
+        }
+
+        .intro {
+            font-size: 17px;
+            color: #555;
+            max-width: 620px;
+        }
+
+        .calculator {
+            margin-top: 45px;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 7px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            margin-bottom: 25px;
+        }
+
+        button {
+            padding: 12px 18px;
+            background: #222;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 15px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            opacity: 0.85;
+        }
+
+        .result {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid #eee;
+            display: none;
+        }
+
+        .result-title {
+            font-size: 14px;
+            color: #777;
+            margin-bottom: 8px;
+        }
+
+        .result-value {
+            font-size: 28px;
+            font-weight: 600;
+        }
+
+        .explanation {
+            margin-top: 12px;
+            color: #555;
+            font-size: 15px;
+        }
+
+        nav {
+            margin-top: 80px;
+        }
+
+        nav a {
+            margin-right: 25px;
+            color: #555;
+            text-decoration: none;
+            font-size: 15px;
+        }
+
+        nav a:hover {
+            text-decoration: underline;
+        }
+
+        footer {
+            margin-top: 80px;
+            font-size: 13px;
+            color: #999;
+        }
+    </style>
+</head>
+
+<body>
+
+<main>
+
+    <header>
+        <h1>Opportunity Cost Calculator</h1>
+
+        <div class="intro">
+            What do you give up when you choose one option over another?
+        </div>
+    </header>
+
+    <section class="calculator">
+
+        <label for="chosen">
+            Value of the option you choose
+        </label>
+
+        <input
+            type="number"
+            id="chosen"
+            placeholder="e.g. 50000"
+            min="0"
+            step="any"
+        >
+
+        <label for="alternative">
+            Value of the best alternative
+        </label>
+
+        <input
+            type="number"
+            id="alternative"
+            placeholder="e.g. 65000"
+            min="0"
+            step="any"
+        >
+
+        <button type="button" id="calculate">
+            Calculate
+        </button>
+
+        <div class="result" id="result">
+
+            <div class="result-title">
+                Opportunity cost
+            </div>
+
+            <div class="result-value" id="resultValue"></div>
+
+            <div class="explanation" id="explanation"></div>
+
+        </div>
+
+    </section>
+
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="ideas.html">Ideas</a>
+        <a href="about.html">About</a>
+        <a href="elsewhere.html">Elsewhere</a>
+    </nav>
+
+    <footer>
+        © 2026 Vijay Ananth
+    </footer>
+
+</main>
+
+<script>
+    const chosenInput = document.getElementById("chosen");
+    const alternativeInput = document.getElementById("alternative");
+    const calculateButton = document.getElementById("calculate");
+
+    const result = document.getElementById("result");
+    const resultValue = document.getElementById("resultValue");
+    const explanation = document.getElementById("explanation");
+
+    calculateButton.addEventListener("click", function () {
+
+        const chosen = Number(chosenInput.value);
+        const alternative = Number(alternativeInput.value);
+
+        if (
+            !Number.isFinite(chosen) ||
+            !Number.isFinite(alternative) ||
+            chosen < 0 ||
+            alternative < 0
+        ) {
+            result.style.display = "block";
+            resultValue.textContent = "Please enter valid values.";
+            explanation.textContent = "";
+            return;
+        }
+
+        const opportunityCost = Math.abs(alternative - chosen);
+
+        result.style.display = "block";
+
+        resultValue.textContent =
+            opportunityCost.toLocaleString();
+
+        explanation.textContent =
+            "This is the difference between the value of your chosen option and the best alternative.";
+    });
+</script>
+
+</body>
+</html>
