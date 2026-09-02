@@ -26,7 +26,7 @@
         }
 
         header {
-            margin-bottom: 50px;
+            margin-bottom: 55px;
         }
 
         h1 {
@@ -45,6 +45,10 @@
             margin-top: 45px;
         }
 
+        .field {
+            margin-bottom: 25px;
+        }
+
         label {
             display: block;
             font-size: 14px;
@@ -58,11 +62,23 @@
             border: 1px solid #ddd;
             border-radius: 4px;
             font-size: 16px;
-            margin-bottom: 25px;
+            background: #fff;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #888;
+        }
+
+        .rate-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
         }
 
         button {
-            padding: 12px 18px;
+            margin-top: 10px;
+            padding: 12px 20px;
             background: #222;
             color: #fff;
             border: none;
@@ -75,28 +91,67 @@
             opacity: 0.85;
         }
 
+        .error {
+            margin-top: 20px;
+            color: #777;
+            font-size: 14px;
+            display: none;
+        }
+
         .result {
-            margin-top: 40px;
-            padding-top: 30px;
+            margin-top: 55px;
+            padding-top: 35px;
             border-top: 1px solid #eee;
             display: none;
         }
 
-        .result-title {
-            font-size: 14px;
+        .result-label {
+            font-size: 13px;
             color: #777;
-            margin-bottom: 8px;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
         }
 
-        .result-value {
-            font-size: 28px;
+        .opportunity-cost {
+            font-size: 34px;
             font-weight: 600;
+            margin-top: 8px;
+        }
+
+        .summary {
+            margin-top: 35px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+
+        .comparison {
+            padding: 20px 0;
+            border-top: 1px solid #eee;
+        }
+
+        .comparison-title {
+            font-size: 14px;
+            color: #777;
+            margin-bottom: 5px;
+        }
+
+        .comparison-value {
+            font-size: 22px;
+            font-weight: 500;
         }
 
         .explanation {
-            margin-top: 12px;
-            color: #555;
+            margin-top: 35px;
             font-size: 15px;
+            color: #555;
+            max-width: 620px;
+        }
+
+        .note {
+            margin-top: 45px;
+            font-size: 14px;
+            color: #888;
         }
 
         nav {
@@ -119,6 +174,14 @@
             font-size: 13px;
             color: #999;
         }
+
+        @media (max-width: 520px) {
+            .rate-row,
+            .summary {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+        }
     </style>
 </head>
 
@@ -130,49 +193,121 @@
         <h1>Opportunity Cost Calculator</h1>
 
         <div class="intro">
-            What do you give up when you choose one option over another?
+            Every choice has an alternative. This calculator estimates
+            what you might give up by choosing one option over another.
         </div>
     </header>
 
     <section class="calculator">
 
-        <label for="chosen">
-            Value of the option you choose
-        </label>
+        <div class="field">
+            <label for="amount">
+                Amount
+            </label>
 
-        <input
-            type="number"
-            id="chosen"
-            placeholder="e.g. 50000"
-            min="0"
-            step="any"
-        >
+            <input
+                type="number"
+                id="amount"
+                placeholder="e.g. 500000"
+                min="0"
+                step="any"
+            >
+        </div>
 
-        <label for="alternative">
-            Value of the best alternative
-        </label>
+        <div class="rate-row">
 
-        <input
-            type="number"
-            id="alternative"
-            placeholder="e.g. 65000"
-            min="0"
-            step="any"
-        >
+            <div class="field">
+                <label for="chosenRate">
+                    Option A — annual return (%)
+                </label>
+
+                <input
+                    type="number"
+                    id="chosenRate"
+                    placeholder="e.g. 4"
+                    min="-100"
+                    step="any"
+                >
+            </div>
+
+            <div class="field">
+                <label for="alternativeRate">
+                    Option B — annual return (%)
+                </label>
+
+                <input
+                    type="number"
+                    id="alternativeRate"
+                    placeholder="e.g. 10"
+                    min="-100"
+                    step="any"
+                >
+            </div>
+
+        </div>
+
+        <div class="field">
+            <label for="years">
+                Time (years)
+            </label>
+
+            <input
+                type="number"
+                id="years"
+                placeholder="e.g. 10"
+                min="0"
+                step="any"
+            >
+        </div>
 
         <button type="button" id="calculate">
             Calculate
         </button>
 
+        <div class="error" id="error">
+            Please enter valid values.
+        </div>
+
         <div class="result" id="result">
 
-            <div class="result-title">
-                Opportunity cost
+            <div class="result-label">
+                Estimated opportunity cost
             </div>
 
-            <div class="result-value" id="resultValue"></div>
+            <div class="opportunity-cost" id="opportunityCost">
+                —
+            </div>
+
+            <div class="summary">
+
+                <div class="comparison">
+                    <div class="comparison-title">
+                        Option A
+                    </div>
+
+                    <div class="comparison-value" id="valueA">
+                        —
+                    </div>
+                </div>
+
+                <div class="comparison">
+                    <div class="comparison-title">
+                        Option B
+                    </div>
+
+                    <div class="comparison-value" id="valueB">
+                        —
+                    </div>
+                </div>
+
+            </div>
 
             <div class="explanation" id="explanation"></div>
+
+            <div class="note">
+                This is an estimate, not a prediction. Actual returns,
+                taxes, inflation, fees, and risk can change the outcome.
+            </div>
 
         </div>
 
@@ -192,40 +327,80 @@
 </main>
 
 <script>
-    const chosenInput = document.getElementById("chosen");
-    const alternativeInput = document.getElementById("alternative");
+    const amountInput = document.getElementById("amount");
+    const chosenRateInput = document.getElementById("chosenRate");
+    const alternativeRateInput = document.getElementById("alternativeRate");
+    const yearsInput = document.getElementById("years");
+
     const calculateButton = document.getElementById("calculate");
 
     const result = document.getElementById("result");
-    const resultValue = document.getElementById("resultValue");
+    const error = document.getElementById("error");
+
+    const opportunityCost = document.getElementById("opportunityCost");
+    const valueA = document.getElementById("valueA");
+    const valueB = document.getElementById("valueB");
     const explanation = document.getElementById("explanation");
+
+    function formatMoney(value) {
+        return value.toLocaleString("en-IN", {
+            style: "currency",
+            currency: "INR",
+            maximumFractionDigits: 0
+        });
+    }
 
     calculateButton.addEventListener("click", function () {
 
-        const chosen = Number(chosenInput.value);
-        const alternative = Number(alternativeInput.value);
+        const amount = Number(amountInput.value);
+        const chosenRate = Number(chosenRateInput.value);
+        const alternativeRate = Number(alternativeRateInput.value);
+        const years = Number(yearsInput.value);
 
-        if (
-            !Number.isFinite(chosen) ||
-            !Number.isFinite(alternative) ||
-            chosen < 0 ||
-            alternative < 0
-        ) {
-            result.style.display = "block";
-            resultValue.textContent = "Please enter valid values.";
-            explanation.textContent = "";
+        const valid =
+            Number.isFinite(amount) &&
+            Number.isFinite(chosenRate) &&
+            Number.isFinite(alternativeRate) &&
+            Number.isFinite(years) &&
+            amount >= 0 &&
+            chosenRate >= -100 &&
+            alternativeRate >= -100 &&
+            years >= 0;
+
+        if (!valid) {
+            result.style.display = "none";
+            error.style.display = "block";
             return;
         }
 
-        const opportunityCost = Math.abs(alternative - chosen);
+        error.style.display = "none";
+
+        const finalA =
+            amount * Math.pow(1 + chosenRate / 100, years);
+
+        const finalB =
+            amount * Math.pow(1 + alternativeRate / 100, years);
+
+        const difference = Math.abs(finalB - finalA);
+
+        valueA.textContent = formatMoney(finalA);
+        valueB.textContent = formatMoney(finalB);
+        opportunityCost.textContent = formatMoney(difference);
+
+        if (finalB > finalA) {
+            explanation.textContent =
+                "If Option A is your choice, the estimated opportunity cost " +
+                "is what you might have gained by choosing Option B instead.";
+        } else if (finalA > finalB) {
+            explanation.textContent =
+                "Option A produces the higher estimated value over this period. " +
+                "Choosing Option B instead would mean giving up the difference.";
+        } else {
+            explanation.textContent =
+                "Both options produce the same estimated value over this period.";
+        }
 
         result.style.display = "block";
-
-        resultValue.textContent =
-            opportunityCost.toLocaleString();
-
-        explanation.textContent =
-            "This is the difference between the value of your chosen option and the best alternative.";
     });
 </script>
 
